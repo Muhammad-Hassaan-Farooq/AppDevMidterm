@@ -42,43 +42,50 @@ class _MissionList extends State<MissionList> {
           future: missions,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              print(snapshot.data![0].payloads);
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     return Card(
+                      elevation: 5,
+                      margin: EdgeInsets.all(5),
                       child: Column(
                         children: [
-                          Text(snapshot.data![index].name),
+                          Row(
+                            children: [
+                            Text(
+                        
+                              snapshot.data![index].name,
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 20),
+                            )
+                          ]),
                           ExpandableDesc(
                             desc: snapshot.data![index].description,
                           ),
-                          GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 1,
-                                    mainAxisSpacing: 1,
-                                    ),
-                                     physics: const NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.zero,
-                            itemCount: snapshot.data![index].payloads.length,
-                            itemBuilder: (context, innerIndex) => Chip(
-                              padding: EdgeInsets.zero,
-                              label: Text(
-                                  style: const TextStyle(color: Colors.black),
-                                  snapshot.data![index].payloads[innerIndex]),
-                              backgroundColor: Colors.primaries[
-                                  Random().nextInt(Colors.primaries.length)],
-                            ),
+                          Wrap(
+                            spacing: 5,
+                            runSpacing: 5,
+                            children: [
+                              for (String chip
+                                  in snapshot.data![index].payloads)
+                                Chip(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  label: Text(
+                                      style:
+                                          const TextStyle(color: Colors.black),
+                                      chip),
+                                  backgroundColor: Colors.primaries[Random()
+                                      .nextInt(Colors.primaries.length)],
+                                      
+                                ),
+                            ],
                           )
                         ],
                       ),
                     );
                   });
             } else if (snapshot.hasError) {
-              print(snapshot.error);
               return Text("Error loading data");
             }
             return CircularProgressIndicator();
