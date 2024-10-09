@@ -44,9 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
        
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor:const Color(0xff006a69),
        
-        title: Text(widget.title),
+        title: Text(widget.title,style: const TextStyle(color: Colors.white),),
       ),
       body: MissionList(),
     
