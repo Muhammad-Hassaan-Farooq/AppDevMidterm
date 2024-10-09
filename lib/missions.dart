@@ -43,17 +43,18 @@ class _MissionList extends State<MissionList> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
+                
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
                     return Card(
                       elevation: 5,
-                      margin: EdgeInsets.all(5),
+                      margin: EdgeInsets.all(10),
                       child: Column(
                         children: [
                           Row(
                             children: [
                             Text(
-                        
+                              
                               snapshot.data![index].name,
                               textAlign: TextAlign.left,
                               style: const TextStyle(
@@ -70,7 +71,7 @@ class _MissionList extends State<MissionList> {
                               for (String chip
                                   in snapshot.data![index].payloads)
                                 Chip(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
                                   label: Text(
                                       style:
                                           const TextStyle(color: Colors.black),
