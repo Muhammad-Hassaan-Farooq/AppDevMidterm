@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:midterm_app/data/mission.dart';
+import 'package:midterm_app/expandable_desc.dart';
 
 Future<List<Mission>> fetchMissions() async{
   final res = await http.get(Uri.parse("https://api.spacexdata.com/v3/missions"));
@@ -39,13 +40,20 @@ class _MissionList extends State<MissionList>{
     return Center(
       child: FutureBuilder(future: missions, builder: (context,snapshot){
         if (snapshot.hasData) { 
-          print(snapshot.data);
+          print(snapshot.data![0].payloads);
           return ListView.builder(itemCount: snapshot.data!.length,itemBuilder: (context,index){
             return Card(
               child: Column(
                 children: [
                   Text(snapshot.data![index].name),
-                 Text(snapshot.data![index].description) 
+                  ExpandableDesc(desc: snapshot.data![index].description,),
+                  
+                  GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
+                  itemCount: snapshot.data![index].payloads.length,
+                  itemBuilder: (context,innerIndex)=>Chip(label:Text(snapshot.data![index].payloads[innerIndex]) ))
+                  
                 ],
               ),
             );
