@@ -31,10 +31,14 @@ class _ExpandableDesc extends State<ExpandableDesc> {
                   });
                 },
                 style: OutlinedButton.styleFrom(backgroundColor:const  Color(0xffdcdcda)),
-                child: Text(
+                child: 
+                Row(
+                  children: [Text(
                   _isExpanded ? "Show less" : "Show more",
                   style: const TextStyle(color: Color(0xff1b8bcf)),
-                ))
+                ),
+                 Icon(_isExpanded?Icons.arrow_upward:Icons.arrow_downward,color:const Color(0xff1b8bcf) ,)]
+                  ))
           ],
         )
       ],
