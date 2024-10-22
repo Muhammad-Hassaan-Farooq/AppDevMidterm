@@ -31,6 +31,7 @@ class MissionList extends StatelessWidget {
         return const Text("Error loading data");
       }
       List<Mission> missions = context.watch<MissionListProvider>().missions;
+      List<bool> isExpanded = context.watch<MissionListProvider>().expanded;
       return ListView.builder(
 
           itemCount: missions.length,
@@ -52,6 +53,9 @@ class MissionList extends StatelessWidget {
                       ]),
                   ExpandableDesc(
                     desc: missions[index].description,
+                    index: index,
+                    isExpanded: isExpanded[index],
+                    onPress:(){ context.read<MissionListProvider>().expand(index);}
                   ),
                   Wrap(
                     spacing: 5,
