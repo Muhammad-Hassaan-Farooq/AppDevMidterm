@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:midterm_app/missions.dart';
+import 'package:midterm_app/providers/MissionListProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => MissionListProvider())
+  ],
+  child: const MyApp(),),
+  );
 }
 
 class MyApp extends StatelessWidget {
