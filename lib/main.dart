@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:midterm_app/bloc/MissionBloc.dart';
+import 'package:midterm_app/bloc/MissionEvent.dart';
 import 'package:midterm_app/missions.dart';
 import 'package:midterm_app/providers/MissionListProvider.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => MissionListProvider())
-  ],
-  child: const MyApp(),),
-  );
+  runApp(
+    BlocProvider(
+        create: (context) => MissionBloc()..add(FetchMissions()),
+        child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
  
   @override
@@ -54,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
        
         title: Text(widget.title,style: const TextStyle(color: Colors.white),),
       ),
-      body: MissionList(),
+      body: const MissionList(),
     
     );
   }

@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:midterm_app/bloc/MissionBloc.dart';
+import 'package:midterm_app/bloc/MissionState.dart';
 import 'package:midterm_app/data/mission.dart';
 import 'package:midterm_app/expandable_desc.dart';
 import 'package:midterm_app/providers/MissionListProvider.dart';
@@ -11,77 +14,76 @@ import 'package:provider/provider.dart';
 
 
 class MissionList extends StatelessWidget {
+  const MissionList({super.key});
+
 
 
   @override
   Widget build(BuildContext context) {
 
-    if(!context.read<MissionListProvider>().firstCall){
-      context.read<MissionListProvider>().fetchMissions();
-    }
 
-    bool isLoading = context.watch<MissionListProvider>().isLoading;
+    return BlocBuilder<MissionBloc,MissionState>(builder: (context,state){
 
-
-    if(isLoading){
-      return const CircularProgressIndicator();
-    }
-    else{
-      if(context.watch<MissionListProvider>().isError){
-        return const Text("Error loading data");
+      if(state is MissionLoading){
+        return const CircularProgressIndicator();
       }
-      List<Mission> missions = context.watch<MissionListProvider>().missions;
-      List<bool> isExpanded = context.watch<MissionListProvider>().expanded;
-      return ListView.builder(
+      else if(state is MissionLoaded){
+        return ListView.builder(
 
-          itemCount: missions.length,
-          itemBuilder: (context, index) {
-            return Card(
-              elevation: 5,
-              margin: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Row(
+            itemCount: state.missions.length,
+            itemBuilder: (context, index) {
+              return Card(
+                elevation: 5,
+                margin: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Row(
+                        children: [
+                          Text(
+
+                            state.missions[index].name,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          )
+                        ]),
+                    ExpandableDesc(
+                        desc: state.missions[index].description,
+                        index: index,
+                        isExpanded: false,
+                        onPress:(){ }
+                    ),
+                    Wrap(
+                      spacing: 5,
+                      runSpacing: 5,
                       children: [
-                        Text(
+                        for (String chip
+                        in state.missions[index].payloads)
+                          Chip(
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
+                            label: Text(
+                                style:
+                                const TextStyle(color: Colors.black),
+                                chip),
+                            backgroundColor: Colors.primaries[Random()
+                                .nextInt(Colors.primaries.length)],
 
-                          missions[index].name,
-                          textAlign: TextAlign.left,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20),
-                        )
-                      ]),
-                  ExpandableDesc(
-                    desc: missions[index].description,
-                    index: index,
-                    isExpanded: isExpanded[index],
-                    onPress:(){ context.read<MissionListProvider>().expand(index);}
-                  ),
-                  Wrap(
-                    spacing: 5,
-                    runSpacing: 5,
-                    children: [
-                      for (String chip
-                      in missions[index].payloads)
-                        Chip(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20),),
-                          label: Text(
-                              style:
-                              const TextStyle(color: Colors.black),
-                              chip),
-                          backgroundColor: Colors.primaries[Random()
-                              .nextInt(Colors.primaries.length)],
+                          ),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            });
+      }
+      else if(state is MissionError){return Center(child: Text(state.error));}
+      return const Center(child: Text("Press button to fetch missions"));
+    });
 
-                        ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          });
+
     }
 
 
 
   }
-}
+
